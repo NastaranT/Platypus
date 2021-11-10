@@ -21,6 +21,7 @@ from __future__ import absolute_import, division, print_function
 import time
 import logging
 import datetime
+import multiprocessing as mp
 from abc import ABCMeta, abstractmethod
 
 LOGGER = logging.getLogger("Platypus")
@@ -189,10 +190,10 @@ class MultiprocessingEvaluator(PoolEvaluator):
 
 class ProcessPoolEvaluator(SubmitEvaluator):
     
-    def __init__(self, processes=None):
+    def __init__(self, processes=None, initializer=None):
         try:
             from concurrent.futures import ProcessPoolExecutor
-            self.executor = ProcessPoolExecutor(processes)
+            self.executor = ProcessPoolExecutor(max_workers=processes, initializer=initializer, mp_context=mp.get_context('fork'))
             super(ProcessPoolEvaluator, self).__init__(self.executor.submit)
             LOGGER.log(logging.INFO, "Started process pool evaluator")
             
