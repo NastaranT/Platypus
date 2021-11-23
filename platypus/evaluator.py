@@ -193,7 +193,7 @@ class ProcessPoolEvaluator(SubmitEvaluator):
     def __init__(self, processes=None, initializer=None):
         try:
             from concurrent.futures import ProcessPoolExecutor
-            self.executor = ProcessPoolExecutor(max_workers=processes, initializer=initializer, mp_context=mp.get_context('fork'))
+            self.executor = ProcessPoolExecutor(max_workers=processes, initializer=initializer, mp_context=mp.get_context('spawn'))
             super(ProcessPoolEvaluator, self).__init__(self.executor.submit)
             LOGGER.log(logging.INFO, "Started process pool evaluator")
             
